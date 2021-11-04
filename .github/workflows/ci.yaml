@@ -1,0 +1,80 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  # Windows:
+  #   runs-on: windows-latest
+  #
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+  #
+  #   - name: Configure CMake
+  #     # Configure CMake in the 'build' subdirectory.
+  #     run: cmake -B ${{github.workspace}}/build
+  #
+  #   - name: Build
+  #     # Build the library with the given configuration
+  #     run: cmake --build ${{github.workspace}}/build
+
+  Linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+            build-essential \
+            cmake \
+            libpng-dev \
+            libboost-regex-dev \
+            libboost-system-dev \
+            libboost-program-options-dev
+
+    - name: Configure CMake
+      # Configure CMake in the 'build' subdirectory.
+      run: cmake -B ${{github.workspace}}/build
+
+    - name: Build
+      # Build the library with the given configuration
+      run: cmake --build ${{github.workspace}}/build
+
+    - name: Run Tests
+      # Run available tests
+      run: cd ${{github.workspace}}/build && make && make test
+
+  macOS:
+    runs-on: macOS-latest
+    env:
+      # Workaround for linker issue with Boost and Homebrew
+      # (https://github.com/Homebrew/homebrew-core/issues/67427)
+      LIBRARY_PATH: /usr/local/opt/icu4c/lib
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        brew install \
+            cmake \
+            boost \
+            libpng \
+            lzlib
+
+    - name: Configure CMake
+      # Configure CMake in the 'build' subdirectory.
+      run: cmake -B ${{github.workspace}}/build
+
+    - name: Build
+      # Build the library with the given configuration
+      run: cmake --build ${{github.workspace}}/build
+
+    # - name: Run Tests
+    #   # Run available tests
+    #   run: cd ${{github.workspace}}/build && make && make test
