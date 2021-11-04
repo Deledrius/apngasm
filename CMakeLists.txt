@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.13)
 
 project(APNGASM)
 
+include(CTest)
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib)
 add_subdirectory(${PROJECT_SOURCE_DIR}/cli)
 add_subdirectory(${PROJECT_SOURCE_DIR}/test)

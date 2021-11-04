@@ -69,13 +69,12 @@ set_target_properties(${APNGASM_STATIC_LIB_TARGET}
 
 # Add libraries/includes
 find_package(PNG REQUIRED)
-include_directories(${PNG_INCLUDE_DIR})
-target_link_libraries(${APNGASM_DYNAMIC_LIB_TARGET} ${PNG_LIBRARY})
-target_link_libraries(${APNGASM_STATIC_LIB_TARGET} ${PNG_LIBRARY})
-message(${PNG_VERSION_STRING})
+include_directories(${PNG_INCLUDE_DIRS})
+target_link_libraries(${APNGASM_DYNAMIC_LIB_TARGET} PUBLIC PNG::PNG)
+target_link_libraries(${APNGASM_STATIC_LIB_TARGET} PUBLIC PNG::PNG)
 
-target_link_libraries(${APNGASM_DYNAMIC_LIB_TARGET} ${ZLIB_LIBRARIES})
-target_link_libraries(${APNGASM_STATIC_LIB_TARGET} ${ZLIB_LIBRARIES})
+target_link_libraries(${APNGASM_DYNAMIC_LIB_TARGET} PRIVATE ${ZLIB_LIBRARIES})
+target_link_libraries(${APNGASM_STATIC_LIB_TARGET} PRIVATE ${ZLIB_LIBRARIES})
 
 #if (APPLE OR WIN32)
 #    set(Boost_USE_STATIC_LIBS ON)
@@ -84,8 +83,8 @@ target_link_libraries(${APNGASM_STATIC_LIB_TARGET} ${ZLIB_LIBRARIES})
 #SET(CMAKE_FIND_LIBRARY_SUFFIXES .dll.a .a .lib ${CMAKE_FIND_LIBRARY_SUFFIXES})
 find_package(Boost REQUIRED COMPONENTS program_options regex system)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-target_link_libraries(${APNGASM_DYNAMIC_LIB_TARGET} Boost::program_options Boost::regex Boost::system)
-target_link_libraries(${APNGASM_STATIC_LIB_TARGET} Boost::program_options Boost::regex Boost::system)
+target_link_libraries(${APNGASM_DYNAMIC_LIB_TARGET} PRIVATE Boost::program_options Boost::regex Boost::system)
+target_link_libraries(${APNGASM_STATIC_LIB_TARGET} PRIVATE Boost::program_options Boost::regex Boost::system)
 
 get_target_property(APNGASM_DYNAMIC_LIB_TARGET_NAME ${APNGASM_DYNAMIC_LIB_TARGET} OUTPUT_NAME)
 get_target_property(APNGASM_STATIC_LIB_TARGET_NAME ${APNGASM_STATIC_LIB_TARGET} OUTPUT_NAME)
