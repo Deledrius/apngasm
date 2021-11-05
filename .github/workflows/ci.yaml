@@ -3,20 +3,31 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  # Windows:
-  #   runs-on: windows-latest
-  #
-  #   steps:
-  #   - name: Checkout
-  #     uses: actions/checkout@v2
-  #
-  #   - name: Configure CMake
-  #     # Configure CMake in the 'build' subdirectory.
-  #     run: cmake -B ${{github.workspace}}/build
-  #
-  #   - name: Build
-  #     # Build the library with the given configuration
-  #     run: cmake --build ${{github.workspace}}/build
+  Windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        vcpkg install --triplet=x64-windows `
+            zlib `
+            libpng `
+            boost-regex `
+            boost-system `
+            boost-algorithm `
+            boost-property-tree `
+            boost-program-options
+
+    - name: Configure CMake
+      # Configure CMake in the 'build' subdirectory.
+      run: cmake -B ${{github.workspace}}\build -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake
+
+    - name: Build
+      # Build the library with the given configuration
+      run: cmake --build ${{github.workspace}}\build
 
   Linux:
     runs-on: ubuntu-latest
